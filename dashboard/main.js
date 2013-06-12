@@ -3,6 +3,22 @@ var UIdata = {};
 /* WIDGET */
 var token;
 var promptResponse;
+var notificationService;
+
+function initialiseService(cb) {
+  webinos.discovery.findServices(new ServiceType("http://webinos.org/api/internal/zonenotification"), {
+    onFound: function (service) {
+      notificationService = service;
+      notificationService.bindService({onBind: function(service) {
+        notificationService = service;
+        cb();
+      }});
+    },
+      onError: function(err) {
+        alert("findServices: " + err.name + " - " + err.message);
+    }
+  });
+}
 
 function initialiseWidget() {
   token = widget.args["prompt"];
@@ -23,6 +39,9 @@ function initialiseWidget() {
   }];
     
 	drawPrompts();
+
+  addClass("loading","hidden");
+  removeClass("user-permission-list-container","hidden");
 
   setTimeout(function() { window.close(); } , widget.args["timeout"]);
 }
@@ -133,10 +152,13 @@ var drawPrompts = function() {
 }
 
 if(document.body.id == 'user-allow-page') {
-	drawUserData();
+  drawUserData();
 } else { //user-permissions-page
-  initialiseWidget();
+  initialiseService(initialiseWidget);
 }
+
+webinos.session.addListener("registeredBrowser", function() {
+});
 
 function drawPermissionButtons(container, buttons, active) {
 	if(typeof container != 'object') container = document.getElementById(container);
@@ -199,7 +221,9 @@ function doContinue() {
     reply = promptResponse;
    }
    
+   notificationService.respond(token,reply);
+   
    // This is bad - sort it out.
-  window.location = "http://localhost:8080/promptReply?token=" + token + "&reply=" + reply;
+//  window.location = "http://localhost:8080/promptReply?token=" + token + "&reply=" + reply;
   setTimeout(function() { window.close(); }, 500);
 }

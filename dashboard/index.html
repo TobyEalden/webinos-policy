@@ -5,6 +5,7 @@
    	<meta charset="utf-8">
 	<link rel="stylesheet" href="main.css">
 	<meta name="viewport" content="width=device-width, user-scalable=no">
+  <script type="text/javascript" src="/webinos.js"></script>
 </head>
 <body id="user-permissions-page">
 	<img class="webinoslogo" src="img/webinosWithBorder.png">
@@ -14,7 +15,7 @@
 		<div class="subtitle">Permission</div>
 	</div>
 
-	<div id="user-permission-list-container" class="content">
+	<div id="user-permission-list-container" class="content hidden">
 		<div class="user-data">
 			<img src="img/userPlaceholder.png" id="newUserReqImg">
 			<h1 id="newUserReqName">Name</h1>
@@ -28,6 +29,7 @@
 			<p>Click <b>deny</b> if you don't know who <span id="newUserReqNameInfo2">*Name*</span> is, or if you do not want him or her to access the service.</p>
 		</div>
 	</div>
+  <div id="loading" class="loading"></div>
 	
 	<script type="text/javascript" src="main.js"></script>
 </body>
